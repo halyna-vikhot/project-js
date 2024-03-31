@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div id = "index-posts"></div>
+
+<h2 class="title">Comments</h2>
+<div id ="comments" ></div>
+
+<script>
+
+function userPosts() {
+    const queryParams = new URLSearchParams(window.location.search);
+    const postId = queryParams.get('id');
+    const objectPost = document.getElementById('index-posts');
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+        .then(res=> res.json())
+        .then(post=>{
+            const title = document.createElement('h2');
+            const name = document.createElement('h3');
+            const body = document.createElement('p');
+            const id = document.createElement('div');
+
+            title.innerText = 'Post Object';
+            name.innerText = `Title: ${post.title}`;
+            body.innerText = `Body: ${post.body}`;
+            id.innerText = `UserId: ${post.user} PostId: ${post.id}`;
+
+            objectPost.append(title, name, id, body)
+        })
+}
+userPosts()
+
+
+function getComments() {
+    const queryParams = new URLSearchParams(window.location.search);
+    const postId = queryParams.get('id');
+    const comDiv = document.getElementById('comments');
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+        .then(res => res.json())
+        .then(value => {
+            for (const valueElement of value) {
+                const commentsDiv = document.createElement('div');
+                const name = document.createElement('h4');
+                const id = document.createElement('div');
+                const body = document.createElement('p');
+                const email = document.createElement('div');
+
+                comDiv.classList.add('comment');
+
+                name.innerText = valueElement.name;
+                id.innerText = `PostId: ${valueElement.postId}  CommentId: ${valueElement.id}`;
+                email.innerText = valueElement.email;
+                body.innerText = valueElement.body;
+
+
+                comDiv.append(name, email, id, body)
+                comDiv.appendChild(commentsDiv);
+            }
+        });
+
+}
+getComments()
+
+</script>
+
+</body>
+</html>
